@@ -9,7 +9,7 @@ animate();
 
 function animate()
 {
-    car.update();
+    car.update(road.borders);
     canvas.height = window.innerHeight;
     context.save();
     context.translate(0, -car.y + canvas.height * 0.75);

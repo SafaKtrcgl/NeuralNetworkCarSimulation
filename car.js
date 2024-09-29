@@ -16,12 +16,15 @@ class Car
         this.acceleration = acceleration;
         this.friction = friction;
 
+        this.sensor = new Sensor(this, 3, 100, Math.PI / 4);
+
         this.controller = new Controller();
     }
 
-    update()
+    update(roadBorders)
     {
         this.#move();
+        this.sensor.update(roadBorders);
     }
 
     #move()
@@ -57,18 +60,13 @@ class Car
                 this.speed = 0;
             }
     
-            if(this.speed != 0)
+            if(this.controller.right)
             {
-                const flipFactor = this.speed > 0 ? 1 : -1;
-    
-                if(this.controller.right)
-                {
-                    this.rotation -= this.rotationSpeed * this.speed * flipFactor;
-                }
-                if(this.controller.left)
-                {
-                    this.rotation += this.rotationSpeed * this.speed  * flipFactor;
-                }
+                this.rotation -= this.rotationSpeed * this.speed;
+            }
+            if(this.controller.left)
+            {
+                this.rotation += this.rotationSpeed * this.speed;
             }
     
             this.x -= Math.sin(this.rotation) * this.speed;
@@ -92,5 +90,7 @@ class Car
         context.fill();
 
         context.restore();
+
+        this.sensor.draw(context);
     }
 }
