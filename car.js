@@ -19,9 +19,18 @@ class Car
 
         this.polygon = this.#createPolygon();
 
-        if(controlType == "KEYS")
+        this.aiInControl = controlType == "AI";
+
+        switch(controlType)
         {
-            this.sensor = new Sensor(this, 3, 100, Math.PI / 4);
+            case "KEYS":
+                this.sensor = new Sensor(this, 3, 100, Math.PI / 4);
+                this.brain = new NeuralNetwork([this.sensor.rayCount, 6, 4]);
+                break;
+            case "AI":
+                this.sensor = new Sensor(this, 5, 150, Math.PI / 4);
+                this.brain = new NeuralNetwork([this.sensor.rayCount, 6, 4]);
+                break;
         }
 
         this.controller = new Controller(controlType);
@@ -41,6 +50,25 @@ class Car
         {
             this.sensor.update(roadBorders, traffic);
         }
+
+        if(this.brain)
+        {
+            const offsets = this.sensor.rayData.map
+            (
+                s => s == null ? 0 : 1- s.offset
+            );
+            const outputs = NeuralNetwork.feedForward(offsets, this.brain);
+
+            if (this.aiInControl)
+            {
+                this.controller.forward = outputs[0];
+                this.controller.left = outputs[1];
+                this.controller.right = outputs[2];
+                this.controller.reverse = outputs[3];
+            }
+        }
+        
+            
     }
 
     #assessDamage(roadBorders, traffic)

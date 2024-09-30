@@ -5,6 +5,10 @@ body
     overflow: hidden;
     text-align: center;
 }
+#networkCanvas
+{
+    background: black;
+}
 #roadCanvas
 {
     background: lightgray;
