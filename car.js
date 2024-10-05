@@ -35,6 +35,9 @@ class Car
         }
 
         this.controller = new Controller(controlType);
+
+        this.image = new Image();
+        this.image.src = `assets/car_${Math.floor(Math.random() * 25) + 1}.png`;
     }
 
     update(roadBorders, traffic)
@@ -170,6 +173,12 @@ class Car
 
     draw(context, color, drawSensor = false)
     {
+        if(this.sensor && drawSensor)
+        {
+            this.sensor.draw(context);
+        }
+        
+        /*
         if(this.damaged)
         {
             context.fillStyle = "black";
@@ -185,10 +194,19 @@ class Car
             context.lineTo(this.polygon[i].x, this.polygon[i].y);
         }
         context.fill();
+        */
 
-        if(this.sensor && drawSensor)
-        {
-            this.sensor.draw(context);
-        }
+        context.save();
+        context.translate(this.x, this.y);
+        context.rotate(-this.rotation);
+        context.drawImage
+        (
+            this.image,
+            -this.width / 2,
+            -this.height / 2,
+            this.width,
+            this.height
+        );
+        context.restore();
     }
 }
