@@ -28,7 +28,8 @@ class Car
                 this.brain = new NeuralNetwork([this.sensor.rayCount, 6, 4]);
                 break;
             case "AI":
-                this.sensor = new Sensor(this, 5, 150, Math.PI / 4);
+                //this.sensor = new Sensor(this, 5, 150, Math.PI / 4);
+                this.sensor = new Sensor(this, 5, 150, Math.PI / 3);
                 this.brain = new NeuralNetwork([this.sensor.rayCount, 6, 4]);
                 break;
         }
@@ -167,7 +168,7 @@ class Car
             this.y -= Math.cos(this.rotation) * this.speed;
     }
 
-    draw(context, color)
+    draw(context, color, drawSensor = false)
     {
         if(this.damaged)
         {
@@ -185,7 +186,7 @@ class Car
         }
         context.fill();
 
-        if(this.sensor)
+        if(this.sensor && drawSensor)
         {
             this.sensor.draw(context);
         }
